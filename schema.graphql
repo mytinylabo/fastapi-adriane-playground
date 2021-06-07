@@ -1,0 +1,78 @@
+
+directive @fixedLength(n: Int!) on INPUT_FIELD_DEFINITION
+
+interface Node {
+    id: ID!
+}
+
+enum SkillKind {
+    UNIQUE
+    GOLD
+    WHITE
+}
+
+type Skill implements Node {
+    id: ID!
+    name: String!
+    kind: SkillKind!
+}
+
+enum AptRank {
+    S
+    A
+    B
+    C
+    D
+    E
+    F
+    G
+}
+
+type Runner implements Node {
+    id: ID!
+    name: String!
+    variant: String!
+    "バ場適性を表すリスト。芝、ダートの順に適性ランクを格納する。"
+    aptGround: [AptRank!]!
+    aptDistance: [AptRank!]!
+    aptPosition: [AptRank!]!
+    status: [Int!]!
+    skills: [Skill]!
+}
+
+type RunnerDef implements Node {
+    id: ID!
+    name: String!
+    variant: String!
+}
+
+type Query {
+    node(id: String): Node
+    hello: String
+    runner(id: String): Runner
+    runnerDef(id: String): RunnerDef
+    runnerDefs: [RunnerDef]!
+    skills: [Skill]!
+    user: User
+}
+
+type Mutation {
+    createSkill(name: String, kind: SkillKind): Skill
+
+    createRunner(input: CreateRunnerInput!): Runner
+}
+
+input CreateRunnerInput{
+    runnerDefId: ID!
+    aptGround: [AptRank!]!
+    aptDistance: [AptRank!]!
+    aptPosition: [AptRank!]!
+    status: [Int!]!
+    skills: [ID]!
+}
+
+
+type User {
+    id: String
+    name: String
+}
